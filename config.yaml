@@ -1,25 +1,15 @@
+# No private credentials in this file. Configure through GitHub Secrets.
 IMDB:
-  AUTH: cookies
-  EMAIL: user@domain.com
-  PASSWORD: password123
-  COOKIEATMAIN: zAta|RHiA67JIrBDPaswIym3GyrTlEuQH-u9yrKP3BUNCHgVyE4oNtUzBYVKlhjjzBiM_Z-GSVnH9rKW3Hf7LdbejovoF6SI4ZmgJcTIUXoA4NVcH1Qahwm0KYCyz95o1gsgby-uQwdU6CoS6MFTnjMkLe1puNiv4uFkvo8mOQulJJeutzYedxiUd0ns9w1X_WeVXPTZWjwisPZMw3EOR6-q9xR4kCEWRW7CmWxU1AEDQbT8ns_AJJD34w1nIQUkuLgBQrvJI_pY
-  LISTS:
-  - ls000000000
-  - ls111111111
-  IGNOREDLISTS:
-  - ls222222222
-  - ls333333333
-  TRACE: false
+  AUTH: credentials
   HEADLESS: true
-  BROWSERPATH:
+  TRACE: false
 SYNC:
   MODE: dry-run
-  HISTORY: false
+  HISTORY: true
   RATINGS: true
   WATCHLIST: true
-  LISTS: true
-  TIMEOUT: 15m
+  LISTS: false
+  TIMEOUT: 30m
 TRAKT:
-  CLIENTID: 828832482dea6fffa4453f849fe873de8be54791b9acc01f6923098d0a62972d
-  CLIENTSECRET: bdf9bab88c17f3710a6394607e96cd3a21dee6e5ea0e0236e9ed06e425ed8b6f
+  REDIRECTURI: http://localhost:5173/callback
   TOKENFILE: trakt-token.json

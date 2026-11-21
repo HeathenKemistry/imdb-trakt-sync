@@ -1,3 +1,7 @@
+> **Versione adattata per Trakt PKCE (sperimentale).** Se stai configurando questa versione, leggi prima [ISTRUZIONI_IT.md](ISTRUZIONI_IT.md). Le istruzioni originali sottostanti su Client Secret, Device Code Flow e Redirect OOB non sono applicabili alla versione modificata.
+
+---
+
 [![sync](https://github.com/cecobask/imdb-trakt-sync/actions/workflows/sync.yaml/badge.svg)](https://github.com/cecobask/imdb-trakt-sync/actions/workflows/sync.yaml)
 [![quality](https://github.com/cecobask/imdb-trakt-sync/actions/workflows/quality.yaml/badge.svg)](https://github.com/cecobask/imdb-trakt-sync/actions/workflows/quality.yaml)
 

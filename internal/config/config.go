@@ -29,7 +29,8 @@ type IMDb struct {
 
 type Trakt struct {
 	ClientID     *string `koanf:"CLIENTID"`
-	ClientSecret *string `koanf:"CLIENTSECRET"`
+	ClientSecret *string `koanf:"CLIENTSECRET"` // Deprecated; not required for PKCE
+	RedirectURI  *string `koanf:"REDIRECTURI"`
 	TokenFile    *string `koanf:"TOKENFILE"`
 }
 
@@ -133,9 +134,6 @@ func (c *Config) Validate() error {
 	if isNilOrEmpty(c.Trakt.ClientID) {
 		return fmt.Errorf("field 'TRAKT_CLIENTID' is required")
 	}
-	if isNilOrEmpty(c.Trakt.ClientSecret) {
-		return fmt.Errorf("field 'TRAKT_CLIENTSECRET' is required")
-	}
 	if c.Sync.Mode == nil || *c.Sync.Mode == "" {
 		return fmt.Errorf("field 'SYNC_MODE' is required")
 	}
@@ -206,6 +204,9 @@ func (c *Config) applyDefaults() {
 	}
 	if c.IMDb.BrowserPath == nil {
 		c.IMDb.BrowserPath = pointer("")
+	}
+	if c.Trakt.RedirectURI == nil || *c.Trakt.RedirectURI == "" {
+		c.Trakt.RedirectURI = pointer("http://localhost:5173/callback")
 	}
 	if c.Trakt.TokenFile == nil || *c.Trakt.TokenFile == "" {
 		c.Trakt.TokenFile = pointer("trakt-token.json")
