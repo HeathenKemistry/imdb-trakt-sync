@@ -149,28 +149,28 @@ func (c *client) authenticateUser() error {
 	if err != nil {
 		return fmt.Errorf("failure navigating and validating response: %w", err)
 	}
-	emailField, err := tab.Element("#ap_email")
+	emailField, err := tab.Timeout(20 * time.Second).Element("#ap_email")
 	if err != nil {
 		return fmt.Errorf("failure finding email field: %w", err)
 	}
 	if err = emailField.Input(*c.Email); err != nil {
 		return fmt.Errorf("failure inputting value in email field: %w", err)
 	}
-	passwordField, err := tab.Element("#ap_password")
+	passwordField, err := tab.Timeout(20 * time.Second).Element("#ap_password")
 	if err != nil {
 		return fmt.Errorf("failure finding password field: %w", err)
 	}
 	if err = passwordField.Input(*c.Password); err != nil {
 		return fmt.Errorf("failure inputting value in password field: %w", err)
 	}
-	submitButton, err := tab.Element("#signInSubmit")
+	submitButton, err := tab.Timeout(20 * time.Second).Element("#signInSubmit")
 	if err != nil {
 		return fmt.Errorf("failure finding submit button: %w", err)
 	}
 	if err = submitButton.Click(proto.InputMouseButtonLeft, 1); err != nil {
 		return fmt.Errorf("failure clicking on submit button: %w", err)
 	}
-	race, err := tab.Race().Element("#nblogout").Element("#auth-error-message-box").Element("img[alt='captcha']").Do()
+	race, err := tab.Timeout(45 * time.Second).Race().Element("#nblogout").Element("#auth-error-message-box").Element("img[alt='captcha']").Do()
 	if err != nil {
 		return fmt.Errorf("failure doing selector race: %w", err)
 	}
@@ -682,6 +682,24 @@ func (c *client) handleWafChallenge(tab *rod.Page) error {
 		return fmt.Errorf("failure setting browser cookies: %w", err)
 	}
 	c.logger.Info("solved aws waf challenge")
+
+	// The solver only installs the WAF token. The browser is still showing
+	// the challenge HTML until it navigates again. Without this reload,
+	// authenticateUser waits for a login selector that cannot appear.
+	if err := tab.Reload(); err != nil {
+		return fmt.Errorf("failure reloading IMDb after WAF challenge: %w", err)
+	}
+	if err := tab.WaitLoad(); err != nil {
+		return fmt.Errorf("failure waiting for IMDb after WAF reload: %w", err)
+	}
+	stillBlocked, _, err := tab.Has(selectorWAF)
+	if err != nil {
+		return fmt.Errorf("failure checking IMDb after WAF reload: %w", err)
+	}
+	if stillBlocked {
+		return fmt.Errorf("IMDb still shows its security challenge after reloading with the token; automated browser access appears blocked")
+	}
+	c.logger.Info("reloaded IMDb page after WAF challenge")
 
 	return nil
 }
